@@ -68,7 +68,7 @@ if(isset($_GET['add']) || isset($_GET['edit'])){
 		} else { $sizesArray = array(); }
 	
 	if($_POST){
-		$db_path = '';
+		
 		$errors = array();
 		if(!empty($_POST['size'])){
 			$sizeString = sanitize($_POST['size']);
@@ -128,7 +128,9 @@ if(isset($_GET['add']) || isset($_GET['edit'])){
 			
 		}else{
 			//upload file and update db
-			move_uploaded_file($tmp_location,$upload_path);
+			if (!empty($_FILES) ){
+				move_uploaded_file($tmp_location,$upload_path);
+			}
 			$upload_sql = "INSERT INTO products (title,price,list_price,brand,categories,sizes,image,description,featured,deleted) VALUES ('$title','$price','$list_price','$brand',$category,'$sizes','$db_path','$description',0,0)";
 			if(isset($_GET['edit'])){
 				$upload_sql = "UPDATE products SET title = '$title', price = '$price', list_price = '$list_price',brand = '$brand', categories = '$category', sizes ='$sizes',image = '$db_path' , description = '$description' WHERE id = '$edit_id'";
@@ -196,9 +198,10 @@ if(isset($_GET['add']) || isset($_GET['edit'])){
 			<div class = "saved-image"><img src ="<?= $saved_image;?>" alt = "saved image"/><br>
 				<a href="products.php?delete_image=1&edit=<?=$edit_id;?>" class="text-danger">Delete image</a>
 			</div>
-		<?php endif; ?>
+		<?php else:?>
 		<label for="photo">Product Photo:</label>
 		<input type="file" name="photo" id="photo" class="form-control">
+	   <?php endif; ?>
 	</div>
 	<div class="form-group col-md-6">
 		<label for="description">Description</label>

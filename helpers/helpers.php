@@ -40,6 +40,14 @@ function login_error_redirect($url = 'login.php'){
    header('Location: '.$url);
 }
 
+function get_category($child_id){
+	global $db;
+	$id = sanitize($child_id);
+	$sql = "SELECT p.id AS 'pid',p.category AS 'parent',c.id AS 'cid',c.category AS 'child' FROM categories c INNER JOIN   categories p ON c.parent = p.id WHERE c.id = '$id'";
+	$query = $db->query($sql);
+	$category = mysqli_fetch_assoc($query);
+	return $category;
+}
 
 function permission_error_redirect($url = 'login.php'){
 	$_SESSION['error_flash'] = "you do not have permission to acces this page";
